@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Date;
 class EventsController extends BaseController
 {
     public function getWarmupEvents() {
-        return Event::all();
+        return Event::limit(3)->get();
     }
 
     /* TODO: complete getEventsWithWorkshops so that it returns all events including the workshops
@@ -101,7 +101,7 @@ class EventsController extends BaseController
      */
 
     public function getEventsWithWorkshops() {
-        return Event::with('workshops')->get();
+        return Event::with('workshops')->limit(3)->get();
     }
 
 
@@ -181,6 +181,6 @@ class EventsController extends BaseController
     public function getFutureEventsWithWorkshops() {
         return Event::whereHas('workshops', function ($query) {
             $query->where('start', '>', now());
-        })->with('workshops')->get();
+        })->with('workshops')->limit(2)->get();
     }
 }
