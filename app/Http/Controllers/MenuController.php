@@ -92,7 +92,23 @@ class MenuController extends BaseController
     ]
      */
 
-    public function getMenuItems() {
-        throw new \Exception('implement in coding task 3');
+    public function getMenuItems()
+    {
+        $menuItems = MenuItem::with('children')->whereNull('parent_id')->get();
+
+        return $this->buildNestedMenu($menuItems);
+    }
+
+    private function buildNestedMenu($menuItems)
+    {
+        $nestedMenu = [];
+
+        foreach ($menuItems as $menuItem) {
+            $nestedMenuItem = $menuItem->toArray();
+            $nestedMenuItem['children'] = $this->buildNestedMenu($menuItem->children);
+            $nestedMenu[] = $nestedMenuItem;
+        }
+
+        return $nestedMenu;
     }
 }
